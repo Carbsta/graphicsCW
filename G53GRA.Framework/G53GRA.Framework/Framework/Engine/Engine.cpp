@@ -68,7 +68,7 @@ void Engine::InitFunc()
 	glEnable(GL_TEXTURE_2D);
 
 	// Enable blending colour information with texture information
-	glEnable(GL_COLOR_MATERIAL);
+	//glEnable(GL_COLOR_MATERIAL);
 
 	// Turn off 2 sided lighting
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);

@@ -30,7 +30,10 @@
     <ClCompile Include="Code\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Code\MyScene.cpp">
+    <ClCompile Include="Code\ClassFiles\MyScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ClassFiles\KorokMask.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,7 +62,10 @@
     <ClInclude Include="Framework\Utility\VectorMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\MyScene.h">
+    <ClInclude Include="Code\HeaderFiles\MyScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\HeaderFiles\KorokMask.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

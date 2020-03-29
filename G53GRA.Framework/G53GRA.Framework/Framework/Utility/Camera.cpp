@@ -51,19 +51,19 @@ void Camera::SetupCamera()
 
 void Camera::Update(const double& deltaTime)
 {
-	float speed = 1.0f;
+	float speed = 100.0f;
 
 	if (aKey)
-		sub(eyePosition, right, speed);
+		sub(eyePosition, right, speed * deltaTime);
 
 	if (dKey)
-		add(eyePosition, right, speed);
+		add(eyePosition, right, speed * deltaTime);
 
 	if (wKey)
-		add(eyePosition, forward, speed);
+		add(eyePosition, forward, speed * deltaTime);
 
 	if (sKey)
-		sub(eyePosition, forward, speed);
+		sub(eyePosition, forward, speed * deltaTime);
 
 	SetupCamera();
 }

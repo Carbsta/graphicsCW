@@ -106,7 +106,6 @@ protected:
 	*/
 	void AddObjectToScene(DisplayableObject *obj);
 
-private:
 	/**
 	* Scene camera. Contains viewing properties. Defaults to framework {@link Camera} class.
 	* Overload {@link #Initialise()} to set a different {@link Camera}.
