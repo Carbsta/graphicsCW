@@ -2,7 +2,7 @@
 #include "VectorMath.h"
 #include "Scene.h"
 
-Camera::Camera() : wKey(0), sKey(0), aKey(0), dKey(0), currentButton(0), mouseX(0), mouseY(0)
+Camera::Camera() : wKey(0), sKey(0), aKey(0), dKey(0), eKey(0), qKey(0), currentButton(0), mouseX(0), mouseY(0)
 {
 	Reset();
 }
@@ -65,6 +65,12 @@ void Camera::Update(const double& deltaTime)
 	if (sKey)
 		sub(eyePosition, forward, speed * deltaTime);
 
+	if (eKey)
+		add(eyePosition, up, speed * deltaTime);
+
+	if (qKey)
+		sub(eyePosition, up, speed * deltaTime);
+
 	SetupCamera();
 }
 
@@ -123,6 +129,14 @@ void Camera::HandleKey(unsigned char key, int state, int x, int y)
 		case 's':
 			sKey = state;
 			break;
+		case 'Q':
+		case 'q':
+			qKey = state;
+			break;
+		case 'E':
+		case 'e':
+			eKey = state;
+			break;
 		case ' ':
 			Reset();
 		default:
@@ -172,9 +186,10 @@ void Camera::HandleMouseDrag(int x, int y)
 			// normalise the right vector
 			norm(right);
 
-			/* As we want out camera to stay on the same plane at the same height (i.e. not move up and down the y axis) update a forward direction vector which can be used to move the camera. This forward vector moves the camera in the same direction as the view direction except it will not contain any y component so it cannot move off of its original height. This was we are free to look up and down however moving forward and back will not move us off of the camera plane. */
+			/* Edited to include Y component */
 
 			forward[0] = vd[0];
+			forward[1] = vd[1];
 			forward[2] = vd[2];
 			norm(forward);
 			break;

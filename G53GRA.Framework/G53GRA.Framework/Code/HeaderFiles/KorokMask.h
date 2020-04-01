@@ -9,7 +9,7 @@ class KorokMask :
 {
 public:
 	KorokMask();
-	KorokMask(GLuint _texId);
+	KorokMask(GLuint _texid);
 	~KorokMask();
 	void Display();
 	enum class Segment { A, B, C, D };
@@ -19,7 +19,7 @@ private:
 	* Draws a circle between start and end.
 	* 0 <= start <= end <= 2 * M_PI
 	*/
-	void drawCircleSegment(float r, float start, float end, Segment seg);
+	void drawCircleSegment(float r, float start, float end, Segment seg, float res);
 	float uMapping(float x, float r, Segment seg);
 	float vMapping(float y, float r, Segment seg);
 	GLuint texid = -1;

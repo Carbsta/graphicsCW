@@ -2,6 +2,7 @@
 
 #include "../Framework/Engine/Scene.h"
 #include "../HeaderFiles/KorokMask.h"
+#include "../HeaderFiles/KorokBody.h"
 
 class MyScene :
 	public Scene
@@ -15,5 +16,4 @@ private:
 	void Projection();
 	void setGlobalLight();
 	void Draw();
-
 };

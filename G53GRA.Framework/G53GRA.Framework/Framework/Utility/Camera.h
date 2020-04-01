@@ -81,7 +81,7 @@ public:
 	*/
 	virtual void SetupCamera();
 
-private:
+protected:
 	/**
 	* Vectors containing eye coordinates, i.e. the position of the camera.
 	* <p>
@@ -105,7 +105,7 @@ private:
 	 * Member variable used to track when a key is pressed between frames
 	 * so that we can do an update in the Update() function rather than HandleKey
 	 * function to obtain smooth motion */
-	int wKey, sKey, aKey, dKey;
+	int wKey, sKey, aKey, dKey, qKey, eKey;
 
 	/** Current rendering window dimensions */
 	int windowWidth, windowHeight;

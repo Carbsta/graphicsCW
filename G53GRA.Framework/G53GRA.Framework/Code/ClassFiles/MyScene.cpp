@@ -1,5 +1,8 @@
 #include "../HeaderFiles/MyScene.h"
 
+Texture Scene::texture = Texture();		// Initialise Texture handler
+Camera Scene::camera = Camera();        // Initialise Camera object
+
 MyScene::MyScene(int argc, char** argv, const char *title, const int& windowWidth, const int& windowHeight)
 	: Scene(argc, argv, title, windowWidth, windowHeight)
 {
@@ -8,12 +11,20 @@ MyScene::MyScene(int argc, char** argv, const char *title, const int& windowWidt
 
 void MyScene::Initialise()
 {
+
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+	DisplayableObject* ko = new KorokBody();
+	ko->size(50);
+	AddObjectToScene(ko);
 
 	GLuint masktex = GetTexture("Textures/KorokMask1.bmp");
 	DisplayableObject* mask = new KorokMask(masktex);
-	mask->size(50);
+	mask->position(-18.f, 55.f, 25.f);
+	mask->size(20);
 	AddObjectToScene(mask);
+
+	
 	
 }
 
@@ -27,7 +38,7 @@ void MyScene::setGlobalLight()
 {
     // Set lighting effect colours and positional parameter
     float ambient[] = { .2f, .2f, .2f, 1.f };      // ambient light (20% white)
-    float diffuse[] = { .5f, .5f, .5f, 1.f };      // diffuse light (50% white)
+    float diffuse[] = { 1.f, 1.f, 1.f, 1.f };      // diffuse light (50% white)
     float specular[] = { 1.f, 1.f, 1.f, 1.f };      // specular light (100% white)
     float position[] = { 1.f, .5f, 1.f, 0.f };      // directional light (w = 0)
     // Attach properties to single light source (GL_LIGHT0)

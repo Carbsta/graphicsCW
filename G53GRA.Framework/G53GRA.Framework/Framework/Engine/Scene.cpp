@@ -4,12 +4,14 @@
 #include "../Interface/DisplayableObject.h"
 #include <cstdlib>
 
-Texture Scene::texture = Texture();		// Initialise Texture handler
-Camera Scene::camera = Camera();        // Initialise Camera object
+//Texture Scene::texture = Texture();		// Initialise Texture handler
+//Camera Scene::camera = Camera();        // Initialise Camera object
 
 Scene::Scene(int argc, char** argv, const char *title, const int& windowWidth, const int& windowHeight)
 	: Engine(argc, argv, title, windowWidth, windowHeight)
 {
+	camera = Camera();        // Initialise Camera object
+	texture = Texture();		// Initialise Texture handler
 	camera.Reset(); // Set Camera to default properties
 }
 /**
