@@ -9,14 +9,17 @@
   <ItemGroup>
     <ClCompile Include="Code\ClassFiles\KorokBody.cpp" />
     <ClCompile Include="Code\ClassFiles\KorokMask.cpp" />
+    <ClCompile Include="Code\ClassFiles\KorokWand.cpp" />
     <ClCompile Include="Code\main.cpp" />
     <ClCompile Include="Code\ClassFiles\MyScene.cpp" />
     <ClCompile Include="Framework\Engine\Engine.cpp" />
     <ClCompile Include="Framework\Engine\Scene.cpp" />
     <ClCompile Include="Framework\Utility\Camera.cpp" />
     <ClCompile Include="Framework\Utility\Texture.cpp" />
+    <ClCompile Include="Code\ClassFiles\Korok.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Code\HeaderFiles\KorokWand.h" />
     <ClInclude Include="Code\HeaderFiles\KorokBody.h" />
     <ClInclude Include="Code\HeaderFiles\KorokMask.h" />
     <ClInclude Include="Code\HeaderFiles\MyScene.h" />
@@ -28,6 +31,7 @@
     <ClInclude Include="Framework\Utility\Camera.h" />
     <ClInclude Include="Framework\Utility\Texture.h" />
     <ClInclude Include="Framework\Utility\VectorMath.h" />
+    <ClInclude Include="Code\HeaderFiles\Korok.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{CE3A8304-475E-425E-BA11-FDAA6293C905}</ProjectGuid>

@@ -14,15 +14,17 @@ void MyScene::Initialise()
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	DisplayableObject* ko = new KorokBody();
+	GLuint masktex = GetTexture("Textures/KorokMask1.bmp");
+
+	DisplayableObject* ko = new Korok(masktex);
 	ko->size(50);
 	AddObjectToScene(ko);
 
-	GLuint masktex = GetTexture("Textures/KorokMask1.bmp");
-	DisplayableObject* mask = new KorokMask(masktex);
-	mask->position(-18.f, 55.f, 25.f);
-	mask->size(20);
-	AddObjectToScene(mask);
+	
+	//DisplayableObject* mask = new KorokMask(masktex);
+	//mask->position(-18.f, 55.f, 25.f);
+	//mask->size(20);
+	//AddObjectToScene(mask);
 
 	
 	

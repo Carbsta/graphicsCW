@@ -1,8 +1,7 @@
 #pragma once
 
 #include "../Framework/Engine/Scene.h"
-#include "../HeaderFiles/KorokMask.h"
-#include "../HeaderFiles/KorokBody.h"
+#include "../HeaderFiles/Korok.h"
 
 class MyScene :
 	public Scene

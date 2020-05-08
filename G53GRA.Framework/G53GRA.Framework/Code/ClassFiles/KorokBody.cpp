@@ -2,21 +2,10 @@
 
 KorokBody::KorokBody() {}
 
-KorokBody::KorokBody(GLuint _texid) {
-	texid = _texid;
-	if (texid != -1) toTexture = true;
-}
-
 KorokBody::~KorokBody() {}
 
 void KorokBody::Display()
 {
-	float mat_colour[]                      // colour reflected by diffuse light
-		= { 1.f, 1.f, 1.f, 1.f };				// white
-	float mat_ambient[]                     // ambient colour
-		= { 0.5f, 0.5f, 0.5f, 1.f };			// grey
-	float mat_specular[]                        // specular colour
-		= { 0.f, 0.f, 0.f, 1.f };               // no reflectance (black)
 
 	glPushMatrix();
 	{
@@ -49,6 +38,7 @@ void KorokBody::drawSegment(float lr, float ur, float res = 0.1 * M_PI)
 	float ux = ur * cos(t);
 	float uz = ur * sin(t);
 	float uy = 1.f;
+	float count = 0.0;
 
 	glBegin(GL_TRIANGLE_STRIP);
 
@@ -111,6 +101,7 @@ void KorokBody::drawKorok()
 	drawBody();
 	drawArms();
 	drawNose();
+	drawHorns();
 }
 
 void KorokBody::drawLegs()
@@ -147,6 +138,7 @@ void KorokBody::drawArms()
 		glRotatef(90.f, 0.f, 0.f, 1.f);
 		glScalef(0.15f, 0.3f, 0.15f);
 		drawCone();
+
 	}
 	glPopMatrix();
 }
@@ -158,6 +150,34 @@ void KorokBody::drawNose()
 		glTranslatef(0.f, 1.f, 0.4f);
 		glRotatef(-90.f, 1.f, 0.f, 0.f);
 		glScalef(0.05f, 0.25f, 0.05f);
+		drawCone();
+	}
+	glPopMatrix();
+}
+
+void KorokBody::drawHorns()
+{
+	glPushMatrix();
+	{
+		glTranslatef(0.25f, 1.5f, 0.0f);
+		glRotatef(-213.f, 0.f, 0.f, 1.f);
+		glPushMatrix();
+		{
+			glTranslatef(0.04f, -0.4f, 0.f);
+			glRotatef(80.f, 0.f, 0.f, 1.f);
+			glScalef(0.02f, 0.1f, 0.02f);
+			drawCone();
+		}
+		glPopMatrix();
+		glScalef(0.15f, 0.6f, 0.2f);
+		drawCone();
+	}
+	glPopMatrix();
+	glPushMatrix();
+	{
+		glTranslatef(-0.25f, 1.5f, 0.0f);
+		glRotatef(-130.f, 0.f, 0.f, 1.f);
+		glScalef(0.15f, 0.6f, 0.2f);
 		drawCone();
 	}
 	glPopMatrix();

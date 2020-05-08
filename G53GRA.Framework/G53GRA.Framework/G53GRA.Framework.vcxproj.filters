@@ -39,6 +39,12 @@
     <ClCompile Include="Code\ClassFiles\KorokBody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Code\ClassFiles\KorokWand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ClassFiles\Korok.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\Engine\Engine.h">
@@ -72,6 +78,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Code\HeaderFiles\KorokBody.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\HeaderFiles\KorokWand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\HeaderFiles\Korok.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
