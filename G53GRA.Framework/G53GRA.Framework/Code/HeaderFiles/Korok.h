@@ -8,7 +8,7 @@ class Korok :
 {
 public:
 	Korok();
-	Korok(GLuint mt);
+	Korok(GLuint mt, GLuint mbt, GLuint wt);
 	Korok(KorokWand* w, KorokMask* m, KorokBody* b);
 	~Korok();
 	void Display();

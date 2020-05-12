@@ -12,7 +12,7 @@ public:
 	void Display();
 private:
 	void drawStick();
-	void drawBalls();
+	void drawFruit();
 	GLuint texid = -1;
 	bool toTexture = false;
 };

@@ -2,7 +2,7 @@
 
 #define _USE_MATH_DEFINES
 #include "DisplayableObject.h"
-#include <cmath>
+#include "../Shared/Shapes.h"
 
 class KorokBody :
 	public DisplayableObject
@@ -18,8 +18,7 @@ private:
 	void drawArms();
 	void drawNose();
 	void drawHorns();
-	void drawSegment(float lr, float ur, float res);
-	void drawCone(float res);
+	float res;
 	float mat_colour[4] = { 0.784f, 0.808f, 0.627f, 1.f };
 	float mat_ambient[4] = { 0.325f, 0.471f, 0.298f, 1.f };
 	float mat_specular[4] = { 0.f, 0.f, 0.f, 1.f };

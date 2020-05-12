@@ -6,7 +6,7 @@ KorokBody::~KorokBody() {}
 
 void KorokBody::Display()
 {
-
+	res = 0.05 * M_PI;
 	glPushMatrix();
 	{
 		glPushAttrib(GL_ALL_ATTRIB_BITS);
@@ -21,78 +21,11 @@ void KorokBody::Display()
 		glRotatef(rotation[2], 0.f, 0.f, 1.f);              // Set orientation (Z)
 		glRotatef(rotation[0], 1.f, 0.f, 0.f);              // Set orientation (X)
 
-		glTranslatef(0.f, -0.2f, 0.f);
 		drawKorok();
 
 		glPopAttrib();
 	}
 	glPopMatrix();
-}
-
-void KorokBody::drawSegment(float lr, float ur, float res = 0.1 * M_PI)
-{
-	float t = 0.f;
-	float lx = lr * cos(t);
-	float lz = lr * sin(t);
-	float ly = 0.f;
-	float ux = ur * cos(t);
-	float uz = ur * sin(t);
-	float uy = 1.f;
-	float count = 0.0;
-
-	glBegin(GL_TRIANGLE_STRIP);
-
-	glNormal3f(lx, 0.f, lz);
-	glVertex3f(lx, ly, lz);
-
-	do
-	{
-		t += res;
-		lx = lr * cos(t);
-		lz = lr * sin(t);
-		ux = ur * cos(t);
-		uz = ur * sin(t);
-
-		glNormal3f(ux, 0.f, uz);
-		glVertex3f(ux, uy, uz);
-
-		glNormal3f(lx, 0.f, lz);
-		glVertex3f(lx, ly, lz);
-
-	} while (t <= (2 * M_PI) + res);
-
-	glEnd();
-}
-
-void KorokBody::drawCone(float res = 0.1 * M_PI)
-{
-	float t = 0.f;
-	float r = 1.f;
-	float x = r * cos(t);
-	float y = 0.0f;
-	float z = r * sin(t);
-
-	glBegin(GL_TRIANGLE_FAN);
-
-	glNormal3f(0.f, -1.f, 0.0f);
-
-	glVertex3f(0.f, -1.f, 0.f);  // base of the cone
-
-	glNormal3f(x, 0.f, z);
-	glVertex3f(x, y, z);
-
-	do
-	{
-		t += res;
-		x = r * cos(t);
-		z = r * sin(t);
-
-		glNormal3f(x, 0.f, z);
-		glVertex3f(x, y, z);
-
-	} while (t <= 2 * M_PI);
-
-	glEnd();
 }
 
 void KorokBody::drawKorok() 
@@ -109,15 +42,17 @@ void KorokBody::drawLegs()
 	glPushMatrix();
 	{
 		glTranslatef(-0.15f, 0.f, 0.f);
+		glRotatef(180.f, 0.f, 0.f, 1.f);
 		glScalef(0.15f, 0.15f, 0.15f);
-		drawCone();
+		drawCone(res);
 	};
 	glPopMatrix();
 	glPushMatrix();
 	{
 		glTranslatef(0.15f, 0.f, 0.f);
+		glRotatef(180.f, 0.f, 0.f, 1.f);
 		glScalef(0.15f, 0.15f, 0.15f);
-		drawCone();
+		drawCone(res);
 	};
 	glPopMatrix();
 }
@@ -127,17 +62,17 @@ void KorokBody::drawArms()
 	glPushMatrix();
 	{
 		glTranslatef(-0.4f, 0.66f, 0.f);
-		glRotatef(-90.f, 0.f, 0.f, 1.f);
+		glRotatef(90.f, 0.f, 0.f, 1.f);
 		glScalef(0.15f, 0.3f, 0.15f);
-		drawCone();
+		drawCone(res);
 	}
 	glPopMatrix();
 	glPushMatrix();
 	{
 		glTranslatef(0.4f, 0.66f, 0.f);
-		glRotatef(90.f, 0.f, 0.f, 1.f);
+		glRotatef(-90.f, 0.f, 0.f, 1.f);
 		glScalef(0.15f, 0.3f, 0.15f);
-		drawCone();
+		drawCone(res);
 
 	}
 	glPopMatrix();
@@ -147,10 +82,10 @@ void KorokBody::drawNose()
 {
 	glPushMatrix();
 	{
-		glTranslatef(0.f, 1.f, 0.4f);
-		glRotatef(-90.f, 1.f, 0.f, 0.f);
+		glTranslatef(0.f, 1.2f, 0.4f);
+		glRotatef(90.f, 1.f, 0.f, 0.f);
 		glScalef(0.05f, 0.25f, 0.05f);
-		drawCone();
+		drawCone(res);
 	}
 	glPopMatrix();
 }
@@ -159,26 +94,28 @@ void KorokBody::drawHorns()
 {
 	glPushMatrix();
 	{
+		//glTranslatef(-0.25f, 2.1f, 0.0f);
 		glTranslatef(0.25f, 1.5f, 0.0f);
-		glRotatef(-213.f, 0.f, 0.f, 1.f);
+		glRotatef(-33.f, 0.f, 0.f, 1.f);
 		glPushMatrix();
 		{
-			glTranslatef(0.04f, -0.4f, 0.f);
-			glRotatef(80.f, 0.f, 0.f, 1.f);
+			glTranslatef(-0.04f, 0.4f, 0.f);
+			glRotatef(100.f, 0.f, 0.f, 1.f);
 			glScalef(0.02f, 0.1f, 0.02f);
-			drawCone();
+			drawCone(res);
 		}
 		glPopMatrix();
 		glScalef(0.15f, 0.6f, 0.2f);
-		drawCone();
+		drawCone(res);
 	}
 	glPopMatrix();
 	glPushMatrix();
 	{
+		//glTranslatef(-0.25f, 2.1f, 0.0f);
 		glTranslatef(-0.25f, 1.5f, 0.0f);
-		glRotatef(-130.f, 0.f, 0.f, 1.f);
+		glRotatef(50.f, 0.f, 0.f, 1.f);
 		glScalef(0.15f, 0.6f, 0.2f);
-		drawCone();
+		drawCone(res);
 	}
 	glPopMatrix();
 }
@@ -187,8 +124,9 @@ void KorokBody::drawBody()
 {
 	glPushMatrix();
 	{
+		glRotatef(180.f, 0.f, 0.f, 1.f);
 		glScalef(0.3f, 0.01f, 0.3f);
-		drawCone();
+		drawCone(res);
 	}
 	glPopMatrix();
 	glPushMatrix();
@@ -197,7 +135,7 @@ void KorokBody::drawBody()
 		glPushMatrix();
 		{
 			glScalef(1.f, 0.1f, 1.f);
-			drawSegment(0.6f, 0.9f);
+			drawFrustum(0.6f, 0.9f, res);
 		};
 		glPopMatrix();
 
@@ -205,7 +143,7 @@ void KorokBody::drawBody()
 		glPushMatrix();
 		{
 			glScalef(1.f, 0.1f, 1.f);
-			drawSegment(0.9f, 1.f);
+			drawFrustum(0.9f, 1.f, res);
 		};
 		glPopMatrix();
 
@@ -213,7 +151,7 @@ void KorokBody::drawBody()
 		glPushMatrix();
 		{
 			glScalef(1.f, 0.2f, 1.f);
-			drawSegment(1.0f, 1.0f);
+			drawFrustum(1.0f, 1.0f, res);
 		};
 		glPopMatrix();
 
@@ -221,7 +159,7 @@ void KorokBody::drawBody()
 		glPushMatrix();
 		{
 			glScalef(1.f, 0.5f, 1.f);
-			drawSegment(1.0f, 0.8f);
+			drawFrustum(1.0f, 0.8f, res);
 		};
 		glPopMatrix();
 
@@ -229,7 +167,7 @@ void KorokBody::drawBody()
 		glPushMatrix();
 		{
 			glScalef(1.f, 0.2f, 1.f);
-			drawSegment(0.8f, 0.8f);
+			drawFrustum(0.8f, 0.8f, res);
 		};
 		glPopMatrix();
 
@@ -237,7 +175,7 @@ void KorokBody::drawBody()
 		glPushMatrix();
 		{
 			glScalef(1.f, 0.4f, 1.f);
-			drawSegment(0.8f, 0.9f);
+			drawFrustum(0.8f, 0.9f, res);
 		};
 		glPopMatrix();
 
@@ -245,7 +183,7 @@ void KorokBody::drawBody()
 		glPushMatrix();
 		{
 			glScalef(1.f, 0.1f, 1.f);
-			drawSegment(0.9f, 0.8f);
+			drawFrustum(0.9f, 0.8f, res);
 		};
 		glPopMatrix();
 
@@ -253,7 +191,7 @@ void KorokBody::drawBody()
 		glPushMatrix();
 		{
 			glScalef(1.f, 0.05f, 1.f);
-			drawSegment(0.8f, 0.7f);
+			drawFrustum(0.8f, 0.7f, res);
 		};
 		glPopMatrix();
 
@@ -261,7 +199,7 @@ void KorokBody::drawBody()
 		glPushMatrix();
 		{
 			glScalef(1.f, 0.05f, 1.f);
-			drawSegment(0.7f, 0.4f);
+			drawFrustum(0.7f, 0.4f, res);
 		};
 		glPopMatrix();
 
@@ -271,8 +209,7 @@ void KorokBody::drawBody()
 	{
 		glTranslatef(0.f, 1.7f, 0.f);
 		glScalef(0.2f, 0.01f, 0.2f);
-		glRotatef(180.f, 1.f, 0.f, 0.f);
-		drawCone();
+		drawCone(res);
 	}
 	glPopMatrix();
 	

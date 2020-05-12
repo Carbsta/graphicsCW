@@ -12,17 +12,23 @@
     <ClCompile Include="Code\ClassFiles\KorokWand.cpp" />
     <ClCompile Include="Code\main.cpp" />
     <ClCompile Include="Code\ClassFiles\MyScene.cpp" />
+    <ClCompile Include="Code\Shared\Shapes.cpp" />
     <ClCompile Include="Framework\Engine\Engine.cpp" />
     <ClCompile Include="Framework\Engine\Scene.cpp" />
     <ClCompile Include="Framework\Utility\Camera.cpp" />
     <ClCompile Include="Framework\Utility\Texture.cpp" />
     <ClCompile Include="Code\ClassFiles\Korok.cpp" />
+    <ClCompile Include="Code\ClassFiles\Tree.cpp" />
+    <ClCompile Include="Code\ClassFiles\Stage.cpp" />
+    <ClCompile Include="Code\ClassFiles\Island.cpp" />
+    <ClCompile Include="Code\ClassFiles\Rock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\HeaderFiles\KorokWand.h" />
     <ClInclude Include="Code\HeaderFiles\KorokBody.h" />
     <ClInclude Include="Code\HeaderFiles\KorokMask.h" />
     <ClInclude Include="Code\HeaderFiles\MyScene.h" />
+    <ClInclude Include="Code\Shared\Shapes.h" />
     <ClInclude Include="Framework\Engine\Engine.h" />
     <ClInclude Include="Framework\Engine\Scene.h" />
     <ClInclude Include="Framework\Interface\Animation.h" />
@@ -32,6 +38,10 @@
     <ClInclude Include="Framework\Utility\Texture.h" />
     <ClInclude Include="Framework\Utility\VectorMath.h" />
     <ClInclude Include="Code\HeaderFiles\Korok.h" />
+    <ClInclude Include="Code\HeaderFiles\Tree.h" />
+    <ClInclude Include="Code\HeaderFiles\Stage.h" />
+    <ClInclude Include="Code\HeaderFiles\Island.h" />
+    <ClInclude Include="Code\HeaderFiles\Rock.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{CE3A8304-475E-425E-BA11-FDAA6293C905}</ProjectGuid>

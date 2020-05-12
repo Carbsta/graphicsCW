@@ -61,8 +61,12 @@ void Engine::InitFunc()
 	glEnable(GL_CULL_FACE);
 
 	// Enable transparency blending
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	// enable alpha testing
+	glAlphaFunc(GL_GREATER, 0.5);
+	glEnable(GL_ALPHA_TEST);
 
 	// Enable 2-D texturing
 	glEnable(GL_TEXTURE_2D);

@@ -104,7 +104,7 @@ int Texture::GetTexture(string fileName)
 	fread(pixelBuffer, sizeof(unsigned char), infoHeader.biWidth * infoHeader.biHeight * (infoHeader.biBitCount / 8), bitmapFile);
 
 	// If texture is in ABGR format swizzle it into RGBA for openGL upload
-	if (infoHeader.biBitCount == 32)
+	/*if (infoHeader.biBitCount == 32)
 	{
 		unsigned char c;
 		for (int i = 0; i < infoHeader.biWidth * infoHeader.biHeight; i++)
@@ -116,7 +116,7 @@ int Texture::GetTexture(string fileName)
 			pixelBuffer[i * 4 + 1] = pixelBuffer[i * 4 + 2];
 			pixelBuffer[i * 4 + 2] = c;
 		}
-	}
+	}*/
 
 	// Enable texturing
 	glEnable(GL_TEXTURE_2D);
