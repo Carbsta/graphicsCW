@@ -43,14 +43,14 @@ void drawCone(float res, GLuint texid)
 
 		surfaceNorm(p1, p2, p3, n);
 
-		glNormal3f(n[0], n[1], n[2]);
-		glVertex3f(p1[0], p1[1], p1[2]);
+		glNormal3fv(n);
+		glVertex3fv(p1);
 
 		if (toTexture) glTexCoord2f(t / (2 * M_PI), 1.f);
-		glVertex3f(p2[0], p2[1], p2[2]);
+		glVertex3fv(p2);
 
 		if (toTexture) glTexCoord2f(t / (2 * M_PI), 0.f);
-		glVertex3f(p3[0], p3[1], p3[2]);
+		glVertex3fv(p3);
 
 		glEnd();
 	} while (t <= (2 * M_PI) + res);
@@ -120,19 +120,19 @@ void drawFrustum(float lr, float ur, float res, GLuint texid)
 
 		surfaceNorm(p1, p2, p3, n);
 
-		glNormal3f(n[0], n[1], n[2]);
+		glNormal3fv(n);
 
 		if (toTexture) glTexCoord2f(ot / (2 * M_PI), 0.f);
-		glVertex3f(p1[0], p1[1], p1[2]);
+		glVertex3fv(p1);
 
 		if (toTexture) glTexCoord2f(ot / (2 * M_PI), 1.f);
-		glVertex3f(p2[0], p2[1], p2[2]);
+		glVertex3fv(p2);
 
 		if (toTexture) glTexCoord2f(t / (2 * M_PI), 1.f);
-		glVertex3f(p3[0], p3[1], p3[2]);
+		glVertex3fv(p3);
 
 		if (toTexture) glTexCoord2f(t / (2 * M_PI), 0.f);
-		glVertex3f(p4[0], p4[1], p4[2]);
+		glVertex3fv(p4);
 
 		glEnd();
 

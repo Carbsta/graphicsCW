@@ -31,6 +31,19 @@ void Rock::Display()
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_colour);  // set colour for diffuse reflectance
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat_spec);   // set colour for specular reflectance
 
+	switch (shape) {
+		case Shape::Single:
+			drawSingle();
+			break;
+		case Shape::Large:
+			drawLarge();
+			break;
+	}
+
 	glPopAttrib();
 	glPopMatrix();
 }
+
+void Rock::drawSingle() {}
+
+void Rock::drawLarge() {}
