@@ -20,4 +20,5 @@ private:
 	void Draw();
 	void Reshape(int w, int h);
 	Stage* stage;
+	GLuint testtex;
 };

@@ -21,28 +21,9 @@ void MyScene::Initialise()
 	textures[3] = GetTexture("Textures/Leaves.bmp");
 	Island* island = new Island(textures);
 	AddObjectToScene(island);
-
-	//GLuint fronttex = GetTexture("Textures/KorokMask1.bmp");
-	//GLuint backtex = GetTexture("Textures/KorokMask1Back.bmp");
-	//GLuint barktex = GetTexture("Textures/Bark.bmp");
-
-	//DisplayableObject* ko = new Korok(fronttex, backtex, barktex);
-	//ko->size(20);
-	//AddObjectToScene(ko);
-
-	//DisplayableObject* ko2 = new Korok(fronttex, backtex, barktex);
-	//ko2->size(20.f, 30.f, 20.f);
-	//ko2->position(100.f, 0.f, 0.f);
-	//AddObjectToScene(ko2);
-
-	//GLuint leaftex = GetTexture("Textures/Leaves.bmp");
-	//Tree* test = new Tree(leaftex, barktex);
-	//test->size(50);
-	//test->position(-50.f, 0.f, 50.f);
-	//test->setNumIter(2);
-	////test->setReplaceString('f', "ff-[-& f + ff + < + fl] + [+>f--f&-fl]");
-	//AddObjectToScene(test);
 	
+	testtex = textures[2];
+
 	stage = new Stage();
 	GLuint* skybox = new GLuint[6];
 	skybox[0] = GetTexture("Textures/skybox_left.bmp");
@@ -54,11 +35,6 @@ void MyScene::Initialise()
 	stage->setTextures(skybox);
 	AddObjectToScene(stage);
 
-	//DisplayableObject* mask = new KorokMask(masktex);
-	//mask->position(-18.f, 55.f, 25.f);
-	//mask->size(20);
-	//AddObjectToScene(mask);
-	
 }
 
 void MyScene::Projection()
@@ -110,6 +86,10 @@ void MyScene::Draw()
 	// Display all objects in the Scene
 	for (DisplayableObject* obj : objects)
 		obj->Display();
+
+	glTranslatef(0.f, 100.f, 0.f);
+	glScalef(10.f, 10.f, 10.f);
+	drawSmoothFrustum(1.f, 1.f, -1);
 
 	// Zealous reset of MODELVIEW matrix
 	glMatrixMode(GL_MODELVIEW);

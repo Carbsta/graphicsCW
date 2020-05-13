@@ -141,6 +141,138 @@ void drawFrustum(float lr, float ur, float res, GLuint texid)
 	if (toTexture) glDisable(GL_TEXTURE_2D);
 }
 
+void drawSmoothFrustum(float lr, float ur, GLuint texid)
+{
+	float t = 0.f;
+	float lx = lr * cos(t);
+	float lz = lr * sin(t);
+	float ux = ur * cos(t);
+	float uz = ur * sin(t);
+	float count = 0.0;
+	bool toTexture = true;
+
+	const float res = 0.1f * M_PI;
+	const int faceNumber = (2 * M_PI) / 0.1f * M_PI;
+
+	GLfloat v[faceNumber * 2 * 3] = {0.f}; //twice as many vertexes as faces, assuming vertexes are shared
+	GLfloat n[faceNumber * 2 * 3] = { 0.f }; //as many normals as vertexes for smooth shading
+	GLfloat tex[faceNumber * 2 * 2] = { 0.f }; // each vertex needs an s and t coordinate
+	GLubyte i[faceNumber * 4] = { 0 }; //each quad needs four vertexes
+
+	/* set the index values, this defines which vertex belongs to each face
+	i[] = {0 1 2 3
+	       3 2 4 5
+		   5 4 6 7
+		   7 6 8 9
+		   ... 1 0}*/
+	i[0] = 0;
+	i[1] = 1;
+	i[2] = 2;
+	i[3] = 3;
+
+	int v0 = 3;
+	int v1 = 2;
+	int v2 = 4;
+	int v3 = 5;
+	for (int f = 1; f < faceNumber; f++) {
+		i[f * 4] = v0;
+		i[(f * 4) + 1] = v1;
+		i[(f * 4) + 2] = v2;
+		i[(f * 4) + 3] = v3;
+		v0 = v0 + 2;
+		v1 = v1 + 2;
+		v2 = v2 + 2;
+		v3 = v3 + 2;
+	}
+	// correct the last vertex pair
+	i[(faceNumber * 4) - 2] = 1;
+	i[(faceNumber * 4) - 1] = 0;
+
+	// Define the first two vertexes in the quad strip
+	v[0] = lx;
+	v[1] = 0.f;
+	v[2] = lz;
+
+	v[3] = ux;
+	v[4] = 1.f;
+	v[5] = uz;
+
+	tex[0] = tex[2] = t / (2 * M_PI);
+	tex[1] = 0.f;
+	tex[3] = 1.f;
+
+	int index = 2;
+	int itex = 4;
+	do // loop for the rest of the vertexes, two at a time, plus normals
+	{
+		t += res;
+		lx = lr * cos(t);
+		lz = lr * sin(t);
+		ux = ur * cos(t);
+		uz = ur * sin(t);
+
+		v[i[index] * 3] = ux;
+		v[(i[index] * 3) + 1] = 1.f;
+		v[(i[index] * 3) + 2] = uz;
+
+		tex[itex] = t / (2 * M_PI);
+		tex[itex + 1] = 1.f;
+
+		index++;
+		itex = itex + 2;
+
+		v[i[index] * 3] = lx;
+		v[(i[index] * 3) + 1] = 0.f;
+		v[(i[index] * 3) + 2] = lz;
+
+		tex[itex] = t / (2 * M_PI);
+		tex[itex + 1] = 0.f;
+
+		index++;
+		itex = itex + 2;
+
+		// update normals
+		float fn[3] = { 0.f };
+		// face normal of the current face - using one triangle
+		surfaceNorm(&v[i[index - 1] * 3], &v[i[index - 2] * 3], &v[i[index-3] * 3], fn);
+
+		//add this to each vertex normal in the current face
+		add(&n[i[index - 3] * 3], fn);
+		add(&n[i[index - 2] * 3], fn);
+		add(&n[i[index - 1] * 3], fn);
+		add(&n[i[index] * 3], fn);
+		// automatic normalisation is enabled so don't need to worry about normalising them.
+
+		
+
+	} while (t <= (2 * M_PI) + res);
+
+	// enable and specify pointers to vertex arrays
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	glNormalPointer(GL_FLOAT, 0, n);
+	glVertexPointer(3, GL_FLOAT, 0, v);
+
+	if (toTexture) {
+		glEnable(GL_TEXTURE_2D);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glTexCoordPointer(2, GL_FLOAT, 0, tex);
+		glBindTexture(GL_TEXTURE_2D, texid);
+	}
+	
+	//glDrawElements(GL_QUAD_STRIP, faceNumber * 2, GL_UNSIGNED_BYTE, i);
+	glDrawArrays(GL_QUAD_STRIP, 0, faceNumber * 2);
+
+	if (toTexture) {
+		glDisable(GL_TEXTURE_2D);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	}
+
+	glDisableClientState(GL_VERTEX_ARRAY);  // disable vertex arrays
+	glDisableClientState(GL_NORMAL_ARRAY);
+}
+
 //void drawFrustrum(float lr, float ur, float res, GLuint texid)
 //{
 //	float t = 0.f;
@@ -311,4 +443,5 @@ void surfaceNorm(const float* p1, const float* p2, const float* p3, float* n)
 	sub(v, p1);
 
 	cross(u, v, n);
+	norm(n);
 }
