@@ -10,6 +10,7 @@
     <ClCompile Include="Code\ClassFiles\KorokBody.cpp" />
     <ClCompile Include="Code\ClassFiles\KorokMask.cpp" />
     <ClCompile Include="Code\ClassFiles\KorokWand.cpp" />
+    <ClCompile Include="Code\ClassFiles\Campfire.cpp" />
     <ClCompile Include="Code\main.cpp" />
     <ClCompile Include="Code\ClassFiles\MyScene.cpp" />
     <ClCompile Include="Code\Shared\Shapes.cpp" />
@@ -24,6 +25,7 @@
     <ClCompile Include="Code\ClassFiles\Rock.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Code\HeaderFiles\Campfire.h" />
     <ClInclude Include="Code\HeaderFiles\KorokWand.h" />
     <ClInclude Include="Code\HeaderFiles\KorokBody.h" />
     <ClInclude Include="Code\HeaderFiles\KorokMask.h" />

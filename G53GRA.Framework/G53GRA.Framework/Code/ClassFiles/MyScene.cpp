@@ -14,11 +14,15 @@ void MyScene::Initialise()
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	GLuint* textures = new GLuint[4];
+	GLuint* textures = new GLuint[8];
 	textures[0] = GetTexture("Textures/KorokMask1.bmp");
 	textures[1] = GetTexture("Textures/KorokMask1Back.bmp");
 	textures[2] = GetTexture("Textures/Bark.bmp");
 	textures[3] = GetTexture("Textures/Leaves.bmp");
+	textures[4] = GetTexture("Textures/Rock.bmp");
+	textures[5] = GetTexture("Textures/Fire.bmp");
+	textures[6] = GetTexture("Textures/IslandSide.bmp");
+	textures[7] = GetTexture("Textures/IslandTop.bmp");
 	Island* island = new Island(textures);
 	AddObjectToScene(island);
 	
@@ -46,9 +50,9 @@ void MyScene::Projection()
 void MyScene::setGlobalLight()
 {
     // Set lighting effect colours and positional parameter
-    float ambient[] = { .2f, .2f, .2f, 1.f };      // ambient light (20% white)
-    float diffuse[] = { 1.f, 1.f, 1.f, 1.f };      // diffuse light (100% white)
-    float specular[] = { 0.2f, 0.2f, 0.2f, 1.f };      // specular light (100% white)
+    float ambient[] = { 0.067f, 0.471f, 0.498f, 1.f };      // ambient light (Dark Blue)
+    float diffuse[] = { 1.f, 0.969f, 0.643f, 1.f };      // diffuse light (Gold yellow)
+    float specular[] = { 1.f, 1.f, 1.f, 1.f };      // specular light (100% white)
     float position[] = { 1.f, .5f, 1.f, 0.f };      // directional light (w = 0)
     // Attach properties to single light source (GL_LIGHT0)
     glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);      // set ambient parameter of light source
@@ -86,10 +90,6 @@ void MyScene::Draw()
 	// Display all objects in the Scene
 	for (DisplayableObject* obj : objects)
 		obj->Display();
-
-	glTranslatef(0.f, 100.f, 0.f);
-	glScalef(10.f, 10.f, 10.f);
-	drawSmoothFrustum(1.f, 1.f, -1);
 
 	// Zealous reset of MODELVIEW matrix
 	glMatrixMode(GL_MODELVIEW);

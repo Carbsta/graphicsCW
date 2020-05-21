@@ -141,137 +141,249 @@ void drawFrustum(float lr, float ur, float res, GLuint texid)
 	if (toTexture) glDisable(GL_TEXTURE_2D);
 }
 
-void drawSmoothFrustum(float lr, float ur, GLuint texid)
+void drawSmoothFrustum(float l, float h, float res, GLuint texid)
 {
-	float t = 0.f;
-	float lx = lr * cos(t);
-	float lz = lr * sin(t);
-	float ux = ur * cos(t);
-	float uz = ur * sin(t);
-	float count = 0.0;
+	float u = 0.f;
+	float v, x, z;
 	bool toTexture = true;
+	float a[3] = { 0.f };
+	float b[3] = { 0.f };
+	float c[3] = { 0.f };
 
-	const float res = 0.1f * M_PI;
-	const int faceNumber = (2 * M_PI) / 0.1f * M_PI;
+	if (texid == -1) toTexture = false;
 
-	GLfloat v[faceNumber * 2 * 3] = {0.f}; //twice as many vertexes as faces, assuming vertexes are shared
-	GLfloat n[faceNumber * 2 * 3] = { 0.f }; //as many normals as vertexes for smooth shading
-	GLfloat tex[faceNumber * 2 * 2] = { 0.f }; // each vertex needs an s and t coordinate
-	GLubyte i[faceNumber * 4] = { 0 }; //each quad needs four vertexes
-
-	/* set the index values, this defines which vertex belongs to each face
-	i[] = {0 1 2 3
-	       3 2 4 5
-		   5 4 6 7
-		   7 6 8 9
-		   ... 1 0}*/
-	i[0] = 0;
-	i[1] = 1;
-	i[2] = 2;
-	i[3] = 3;
-
-	int v0 = 3;
-	int v1 = 2;
-	int v2 = 4;
-	int v3 = 5;
-	for (int f = 1; f < faceNumber; f++) {
-		i[f * 4] = v0;
-		i[(f * 4) + 1] = v1;
-		i[(f * 4) + 2] = v2;
-		i[(f * 4) + 3] = v3;
-		v0 = v0 + 2;
-		v1 = v1 + 2;
-		v2 = v2 + 2;
-		v3 = v3 + 2;
-	}
-	// correct the last vertex pair
-	i[(faceNumber * 4) - 2] = 1;
-	i[(faceNumber * 4) - 1] = 0;
-
-	// Define the first two vertexes in the quad strip
-	v[0] = lx;
-	v[1] = 0.f;
-	v[2] = lz;
-
-	v[3] = ux;
-	v[4] = 1.f;
-	v[5] = uz;
-
-	tex[0] = tex[2] = t / (2 * M_PI);
-	tex[1] = 0.f;
-	tex[3] = 1.f;
-
-	int index = 2;
-	int itex = 4;
-	do // loop for the rest of the vertexes, two at a time, plus normals
-	{
-		t += res;
-		lx = lr * cos(t);
-		lz = lr * sin(t);
-		ux = ur * cos(t);
-		uz = ur * sin(t);
-
-		v[i[index] * 3] = ux;
-		v[(i[index] * 3) + 1] = 1.f;
-		v[(i[index] * 3) + 2] = uz;
-
-		tex[itex] = t / (2 * M_PI);
-		tex[itex + 1] = 1.f;
-
-		index++;
-		itex = itex + 2;
-
-		v[i[index] * 3] = lx;
-		v[(i[index] * 3) + 1] = 0.f;
-		v[(i[index] * 3) + 2] = lz;
-
-		tex[itex] = t / (2 * M_PI);
-		tex[itex + 1] = 0.f;
-
-		index++;
-		itex = itex + 2;
-
-		// update normals
-		float fn[3] = { 0.f };
-		// face normal of the current face - using one triangle
-		surfaceNorm(&v[i[index - 1] * 3], &v[i[index - 2] * 3], &v[i[index-3] * 3], fn);
-
-		//add this to each vertex normal in the current face
-		add(&n[i[index - 3] * 3], fn);
-		add(&n[i[index - 2] * 3], fn);
-		add(&n[i[index - 1] * 3], fn);
-		add(&n[i[index] * 3], fn);
-		// automatic normalisation is enabled so don't need to worry about normalising them.
-
-		
-
-	} while (t <= (2 * M_PI) + res);
-
-	// enable and specify pointers to vertex arrays
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glEnableClientState(GL_VERTEX_ARRAY);
-
-	glNormalPointer(GL_FLOAT, 0, n);
-	glVertexPointer(3, GL_FLOAT, 0, v);
 
 	if (toTexture) {
 		glEnable(GL_TEXTURE_2D);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glTexCoordPointer(2, GL_FLOAT, 0, tex);
 		glBindTexture(GL_TEXTURE_2D, texid);
 	}
-	
-	//glDrawElements(GL_QUAD_STRIP, faceNumber * 2, GL_UNSIGNED_BYTE, i);
-	glDrawArrays(GL_QUAD_STRIP, 0, faceNumber * 2);
 
-	if (toTexture) {
-		glDisable(GL_TEXTURE_2D);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	}
+	do
+	{
+		glBegin(GL_QUADS);
 
-	glDisableClientState(GL_VERTEX_ARRAY);  // disable vertex arrays
-	glDisableClientState(GL_NORMAL_ARRAY);
+		// bottom
+		v = l;
+		x = v * cos(u);
+		z = v * sin(u);
+
+		// for normal calculation, we take the partial derivatives of the parametric representation
+		// to get two tangent vectors, one tangent to the slope, a, and the other tangent to the
+		// cross sectional circle, b. We then take the cross product a x b = c, the normal.
+		a[0] = cos(u);
+		a[1] = 1.f;
+		a[2] = sin(u);
+
+		b[0] = -v * sin(u);
+		b[1] = 0.f;
+		b[2] = v * cos(u);
+
+		cross(a, b, c);
+		norm(c);
+
+		glNormal3fv(c);
+		if (toTexture) glTexCoord2f(u / (2 * M_PI), 0.f);
+		glVertex3f(x, v, z);
+
+		// top - increment v
+		v = h;
+		x = v * cos(u);
+		z = v * sin(u);
+
+		a[0] = cos(u);
+		a[1] = 1.f;
+		a[2] = sin(u);
+
+		b[0] = -v * sin(u);
+		b[1] = 0.f;
+		b[2] = v * cos(u);
+
+		cross(a, b, c);
+		norm(c);
+
+		if (toTexture) glTexCoord2f(u / (2 * M_PI), 1.f);
+		glVertex3f(x, v, z);
+		// increment u
+		u = u + res;
+
+		// top
+		x = v * cos(u);
+		z = v * sin(u);
+
+		a[0] = cos(u);
+		a[1] = 1.f;
+		a[2] = sin(u);
+
+		b[0] = -v * sin(u);
+		b[1] = 0.f;
+		b[2] = v * cos(u);
+
+		cross(a, b, c);
+		norm(c);
+
+		glNormal3fv(c);
+		if (toTexture) glTexCoord2f(u / (2 * M_PI), 1.f);
+		glVertex3f(x, v, z);
+
+		// bottom - decrement v
+		v = l;
+		x = v * cos(u);
+		z = v * sin(u);
+
+		a[0] = cos(u);
+		a[1] = 1.f;
+		a[2] = sin(u);
+
+		b[0] = -v * sin(u);
+		b[1] = 0.f;
+		b[2] = v * cos(u);
+
+		cross(a, b, c);
+		norm(c);
+
+		glNormal3fv(c);
+		if (toTexture) glTexCoord2f(u / (2 * M_PI), 0.f);
+		glVertex3f(x, v, z);
+
+		glEnd();
+
+	} while (u <= (2 * M_PI) + res);
+
+	if (toTexture) glDisable(GL_TEXTURE_2D);
+
 }
+
+//void drawSmoothFrustum(float lr, float ur, GLuint texid)
+//{
+//	float t = 0.f;
+//	float lx = lr * cos(t);
+//	float lz = lr * sin(t);
+//	float ux = ur * cos(t);
+//	float uz = ur * sin(t);
+//	float count = 0.0;
+//	bool toTexture = true;
+//
+//	const float res = 0.1f * M_PI;
+//	const int faceNumber = (2 * M_PI) / 0.1f * M_PI;
+//
+//	GLfloat v[faceNumber * 2 * 3] = {0.f}; //twice as many vertexes as faces, assuming vertexes are shared
+//	GLfloat n[faceNumber * 2 * 3] = { 0.f }; //as many normals as vertexes for smooth shading
+//	GLfloat tex[faceNumber * 2 * 2] = { 0.f }; // each vertex needs an s and t coordinate
+//	GLubyte i[faceNumber * 4] = { 0 }; //each quad needs four vertexes
+//
+//	/* set the index values, this defines which vertex belongs to each face
+//	i[] = {0 1 2 3
+//	       3 2 4 5
+//		   5 4 6 7
+//		   7 6 8 9
+//		   ... 1 0}*/
+//	i[0] = 0;
+//	i[1] = 1;
+//	i[2] = 2;
+//	i[3] = 3;
+//
+//	int v0 = 3;
+//	int v1 = 2;
+//	int v2 = 4;
+//	int v3 = 5;
+//	for (int f = 1; f < faceNumber; f++) {
+//		i[f * 4] = v0;
+//		i[(f * 4) + 1] = v1;
+//		i[(f * 4) + 2] = v2;
+//		i[(f * 4) + 3] = v3;
+//		v0 = v0 + 2;
+//		v1 = v1 + 2;
+//		v2 = v2 + 2;
+//		v3 = v3 + 2;
+//	}
+//	// correct the last vertex pair
+//	i[(faceNumber * 4) - 2] = 1;
+//	i[(faceNumber * 4) - 1] = 0;
+//
+//	// Define the first two vertexes in the quad strip
+//	v[0] = lx;
+//	v[1] = 0.f;
+//	v[2] = lz;
+//
+//	v[3] = ux;
+//	v[4] = 1.f;
+//	v[5] = uz;
+//
+//	tex[0] = tex[2] = t / (2 * M_PI);
+//	tex[1] = 0.f;
+//	tex[3] = 1.f;
+//
+//	int index = 2;
+//	int itex = 4;
+//	do // loop for the rest of the vertexes, two at a time, plus normals
+//	{
+//		t += res;
+//		lx = lr * cos(t);
+//		lz = lr * sin(t);
+//		ux = ur * cos(t);
+//		uz = ur * sin(t);
+//
+//		v[i[index] * 3] = ux;
+//		v[(i[index] * 3) + 1] = 1.f;
+//		v[(i[index] * 3) + 2] = uz;
+//
+//		tex[itex] = t / (2 * M_PI);
+//		tex[itex + 1] = 1.f;
+//
+//		index++;
+//		itex = itex + 2;
+//
+//		v[i[index] * 3] = lx;
+//		v[(i[index] * 3) + 1] = 0.f;
+//		v[(i[index] * 3) + 2] = lz;
+//
+//		tex[itex] = t / (2 * M_PI);
+//		tex[itex + 1] = 0.f;
+//
+//		index++;
+//		itex = itex + 2;
+//
+//		// update normals
+//		float fn[3] = { 0.f };
+//		// face normal of the current face - using one triangle
+//		surfaceNorm(&v[i[index - 1] * 3], &v[i[index - 2] * 3], &v[i[index-3] * 3], fn);
+//
+//		//add this to each vertex normal in the current face
+//		add(&n[i[index - 3] * 3], fn);
+//		add(&n[i[index - 2] * 3], fn);
+//		add(&n[i[index - 1] * 3], fn);
+//		add(&n[i[index] * 3], fn);
+//		// automatic normalisation is enabled so don't need to worry about normalising them.
+//
+//		
+//
+//	} while (t <= (2 * M_PI) + res);
+//
+//	// enable and specify pointers to vertex arrays
+//	glEnableClientState(GL_NORMAL_ARRAY);
+//	glEnableClientState(GL_VERTEX_ARRAY);
+//
+//	glNormalPointer(GL_FLOAT, 0, n);
+//	glVertexPointer(3, GL_FLOAT, 0, v);
+//
+//	if (toTexture) {
+//		glEnable(GL_TEXTURE_2D);
+//		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+//		glTexCoordPointer(2, GL_FLOAT, 0, tex);
+//		glBindTexture(GL_TEXTURE_2D, texid);
+//	}
+//	
+//	//glDrawElements(GL_QUAD_STRIP, faceNumber * 2, GL_UNSIGNED_BYTE, i);
+//	glDrawArrays(GL_QUAD_STRIP, 0, faceNumber * 2);
+//
+//	if (toTexture) {
+//		glDisable(GL_TEXTURE_2D);
+//		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+//	}
+//
+//	glDisableClientState(GL_VERTEX_ARRAY);  // disable vertex arrays
+//	glDisableClientState(GL_NORMAL_ARRAY);
+//}
 
 //void drawFrustrum(float lr, float ur, float res, GLuint texid)
 //{
@@ -328,6 +440,14 @@ void drawSquareFrustum(float ls, float us, GLuint texid)
 	float p2[3];
 	float p3[3];
 	float n[3];
+	bool toTexture = true;
+
+	if (texid == -1) toTexture = false;
+
+	if (toTexture) {
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, texid);
+	}
 
 	glBegin(GL_TRIANGLES);
 
@@ -342,12 +462,18 @@ void drawSquareFrustum(float ls, float us, GLuint texid)
 
 	glNormal3f(n[0], n[1], n[2]);
 
+	if (toTexture) glTexCoord2f(0.f, 1.f);
 	glVertex3f(rl, -rl, rl);  // 3
+	if (toTexture) glTexCoord2f(1.f, 1.f);
 	glVertex3f(ru, ru, ru);   // 2
+	if (toTexture) glTexCoord2f(1.f, 0.f);
 	glVertex3f(-ru, ru, ru);  // 1
 
+	if (toTexture) glTexCoord2f(0.f, 1.f);
 	glVertex3f(rl, -rl, rl);  // 3
+	if (toTexture) glTexCoord2f(1.f, 0.f);
 	glVertex3f(-ru, ru, ru);  // 1
+	if (toTexture) glTexCoord2f(0.f, 0.f);
 	glVertex3f(-rl, -rl, rl); // 0
 
 	// back face
@@ -358,35 +484,53 @@ void drawSquareFrustum(float ls, float us, GLuint texid)
 
 	glNormal3f(n[0], n[1], n[2]);
 
+	if (toTexture) glTexCoord2f(1.f, 0.f);
 	glVertex3f(-rl, -rl, -rl); // 7
+	if (toTexture) glTexCoord2f(1.f, 1.f);
 	glVertex3f(-ru, ru, -ru);  // 6
+	if (toTexture) glTexCoord2f(0.f, 1.f);
 	glVertex3f(ru, ru, -ru);   // 5
 
+	if (toTexture) glTexCoord2f(1.f, 0.f);
 	glVertex3f(-rl, -rl, -rl); // 7
+	if (toTexture) glTexCoord2f(0.f, 1.f);
 	glVertex3f(ru, ru, -ru);   // 5
+	if (toTexture) glTexCoord2f(0.f, 0.f);
 	glVertex3f(rl, -rl, -rl);  // 4
 
 	//top face
 	// not at angle so no calculation required
 	glNormal3f(0, 1, 0);
 
+	if (toTexture) glTexCoord2f(0.f, 0.f);
 	glVertex3f(-ru, ru, ru);   // 1
+	if (toTexture) glTexCoord2f(0.f, 1.f);
 	glVertex3f(ru, ru, ru);    // 2
+	if (toTexture) glTexCoord2f(1.f, 1.f);
 	glVertex3f(ru, ru, -ru);   // 5
 
+	if (toTexture) glTexCoord2f(0.f, 0.f);
 	glVertex3f(-ru, ru, ru);   // 1
+	if (toTexture) glTexCoord2f(1.f, 1.f);
 	glVertex3f(ru, ru, -ru);   // 5
+	if (toTexture) glTexCoord2f(1.f, 0.f);
 	glVertex3f(-ru, ru, -ru);  // 6
 
 	//bottom face
 	glNormal3f(0, -1, 0);
 
+	if (toTexture) glTexCoord2f(0.f, 0.f);
 	glVertex3f(-rl, -rl, -rl); // 7
+	if (toTexture) glTexCoord2f(1.f, 0.f);
 	glVertex3f(rl, -rl, -rl);  // 4
+	if (toTexture) glTexCoord2f(1.f, 1.f);
 	glVertex3f(rl, -rl, rl);   // 3
 
+	if (toTexture) glTexCoord2f(0.f, 0.f);
 	glVertex3f(-rl, -rl, -rl); // 7
+	if (toTexture) glTexCoord2f(1.f, 1.f);
 	glVertex3f(rl, -rl, rl);   // 3
+	if (toTexture) glTexCoord2f(0.f, 1.f);
 	glVertex3f(-rl, -rl, rl);  // 0
 
 	//left face
@@ -399,12 +543,18 @@ void drawSquareFrustum(float ls, float us, GLuint texid)
 
 	glNormal3f(n[0], n[1], n[2]);
 
+	if (toTexture) glTexCoord2f(0.f, 0.f);
 	glVertex3f(-rl, -rl, -rl); // 7
+	if (toTexture) glTexCoord2f(1.f, 0.f);
 	glVertex3f(-rl, -rl, rl);  // 0
+	if (toTexture) glTexCoord2f(1.f, 1.f);
 	glVertex3f(-ru, ru, ru);   // 1
 
+	if (toTexture) glTexCoord2f(0.f, 0.f);
 	glVertex3f(-rl, -rl, -rl); // 7
+	if (toTexture) glTexCoord2f(1.f, 1.f);
 	glVertex3f(-ru, ru, ru);   // 1
+	if (toTexture) glTexCoord2f(0.f, 1.f);
 	glVertex3f(-ru, ru, -ru);  // 6
 
 	//right face
@@ -417,15 +567,27 @@ void drawSquareFrustum(float ls, float us, GLuint texid)
 
 	glNormal3f(n[0], n[1], n[2]);
 
+	if (toTexture) glTexCoord2f(0.f, 0.f);
 	glVertex3f(rl, -rl, rl);   // 3
+	if (toTexture) glTexCoord2f(1.f, 0.f);
 	glVertex3f(rl, -rl, -rl);  // 4
+	if (toTexture) glTexCoord2f(1.f, 1.f);
 	glVertex3f(ru, ru, -ru);   // 5
 
+	if (toTexture) glTexCoord2f(0.f, 0.f);
 	glVertex3f(rl, -rl, rl);   // 3
+	if (toTexture) glTexCoord2f(1.f, 1.f);
 	glVertex3f(ru, ru, -ru);   // 5
+	if (toTexture) glTexCoord2f(1.f, 0.f);
 	glVertex3f(ru, ru, ru);    // 2
 
 	glEnd();
+
+	if (toTexture) glDisable(GL_TEXTURE_2D);
+}
+
+void drawCube(float r, GLuint texid) {
+	drawSquareFrustum(r, r, texid);
 }
 
 void surfaceNorm(const float* p1, const float* p2, const float* p3, float* n)

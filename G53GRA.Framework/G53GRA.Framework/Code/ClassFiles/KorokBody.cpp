@@ -6,7 +6,7 @@ KorokBody::~KorokBody() {}
 
 void KorokBody::Display()
 {
-	res = 0.05 * M_PI;
+	res = 0.5 * M_PI;
 	glPushMatrix();
 	{
 		glPushAttrib(GL_ALL_ATTRIB_BITS);
@@ -26,6 +26,22 @@ void KorokBody::Display()
 		glPopAttrib();
 	}
 	glPopMatrix();
+}
+
+void KorokBody::Update(const double& deltaTime)
+{
+
+	aT = fmod(aT + deltaTime, 360.f);
+
+	lArmRot = armDistance * sin(aT * armSpeed);
+	rArmRot = armDistance * cos(aT * armSpeed);
+
+
+}
+
+void KorokBody::setArmSpeed(float _armSpeed)
+{
+	armSpeed = _armSpeed;
 }
 
 void KorokBody::drawKorok() 
@@ -62,7 +78,7 @@ void KorokBody::drawArms()
 	glPushMatrix();
 	{
 		glTranslatef(-0.4f, 0.66f, 0.f);
-		glRotatef(90.f, 0.f, 0.f, 1.f);
+		glRotatef(90.f + lArmRot, 0.f, 0.f, 1.f);
 		glScalef(0.15f, 0.3f, 0.15f);
 		drawCone(res);
 	}
@@ -70,7 +86,7 @@ void KorokBody::drawArms()
 	glPushMatrix();
 	{
 		glTranslatef(0.4f, 0.66f, 0.f);
-		glRotatef(-90.f, 0.f, 0.f, 1.f);
+		glRotatef(-90.f + rArmRot, 0.f, 0.f, 1.f);
 		glScalef(0.15f, 0.3f, 0.15f);
 		drawCone(res);
 
@@ -136,6 +152,8 @@ void KorokBody::drawBody()
 		{
 			glScalef(1.f, 0.1f, 1.f);
 			drawFrustum(0.6f, 0.9f, res);
+			//glTranslatef(0.f, -0.66f, 0.f);
+			//drawSmoothFrustum(0.666f, 1.f, res);
 		};
 		glPopMatrix();
 

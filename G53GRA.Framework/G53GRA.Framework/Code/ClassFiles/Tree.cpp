@@ -139,7 +139,7 @@ void Tree::branch()
 
 	glScalef(0.9f, 0.9f, 0.9f);
 
-	/*float lr = 0.15f;
+	float lr = 0.15f;
 	float ur = 0.135f;
 	float t = 0.f;
 	float lx = lr * cos(t);
@@ -180,8 +180,7 @@ void Tree::branch()
 
 	} while (t <= (2 * M_PI) + res);
 
-	glEnd();*/
-	drawFrustum(0.15f, 0.135f, 0.1 * M_PI, bark);
+	glEnd();
 
 	glTranslatef(0.f, 1.f, 0.f);            // translate to top of branch
 

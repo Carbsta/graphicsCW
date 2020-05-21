@@ -14,8 +14,9 @@
 
 void drawCone(float res, GLuint texid = -1);
 void drawFrustum(float lr, float ur, float res, GLuint texid = -1);
-void drawSmoothFrustum(float lr, float ur, GLuint texid = -1);
+void drawSmoothFrustum(float l, float h, float res, GLuint texid = -1);
 void drawSquareFrustum(float ls, float us, GLuint texid = -1);
+void drawCube(float r, GLuint texid = -1);
 
 /* Calculates the surface normal for a triangle defined by p1, p2, p3
 Sets vector n to result*/

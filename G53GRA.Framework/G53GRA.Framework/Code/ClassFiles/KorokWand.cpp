@@ -19,6 +19,7 @@ void KorokWand::Display()
 	float mat_specular[]                        // specular colour
 		= { 0.f, 0.f, 0.f, 1.f };               // no reflectance (black)
 
+
 	glPushMatrix();
 	{
 		glPushAttrib(GL_ALL_ATTRIB_BITS);
@@ -106,13 +107,14 @@ void KorokWand::drawFruit()
 	float mat_colour[]                      // colour reflected by diffuse light
 		= { 0.745f, 0.133f, 0.149f, 1.f };				// red
 	float mat_ambient[]                     // ambient colour
-		= { 0.388f, 0.067f, 0.063f, 1.f };			// grey
+		= { 0.388f, 0.067f, 0.063f, 1.f };			// darker red
 	float mat_specular[]                    // specular colour
-		= { 1.f, 0.996f, 1.f, 1.f };
+		= { 1.f, 0.996f, 1.f, 1.f };				// near white
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat_ambient); // set colour for ambient reflectance
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_colour);  // set colour for diffuse reflectance
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat_specular); // set colour for specular reflectance
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.f); // shiny berries
 
 	glPushMatrix();
 	{

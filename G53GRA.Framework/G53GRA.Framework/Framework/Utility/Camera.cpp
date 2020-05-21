@@ -8,13 +8,13 @@ Camera::Camera() : wKey(0), sKey(0), aKey(0), dKey(0), eKey(0), qKey(0), current
 }
 
 void Camera::Reset(){
-	// set the camera position to start at (0,0,0)
-	eyePosition[0] = 0.0f;
-	eyePosition[1] = 70.f;//(static_cast<float>(Scene::GetWindowHeight()) / 2.f) / tan(M_PI / 8.f) / 2;
-	eyePosition[2] = 0.5f * static_cast<float>(Scene::GetWindowHeight()) / static_cast<float>(tan(M_PI / 6.0));//0.0f;
+	// set the camera start position.
+	eyePosition[0] = -50.0f;
+	eyePosition[1] = 30.f;
+	eyePosition[2] = 170.f;
 
 	// set the view direction vector of the camera to be (0,0,-1)
-	vd[0] = 0.0f;
+	vd[0] = 0.3f;
 	vd[1] = 0.0f;
 	vd[2] = -1.0f;
 

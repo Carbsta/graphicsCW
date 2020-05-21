@@ -8,6 +8,11 @@ Rock::Rock(GLuint _texid)
 	if (texid != -1) toTexture = true;
 }
 
+void Rock::setShape(Shape s)
+{
+	shape = s;
+}
+
 void Rock::Display()
 {
 	glPushMatrix();
@@ -44,6 +49,17 @@ void Rock::Display()
 	glPopMatrix();
 }
 
-void Rock::drawSingle() {}
+void Rock::drawSingle() {
+	drawSquareFrustum(1.f, 0.8f, texid);
+}
 
-void Rock::drawLarge() {}
+void Rock::drawLarge() {
+	//glScalef(2.f, 2.f, 2.f);
+	drawSingle();
+	glTranslatef(-0.3f, 0.f, -1.f);
+	glScalef(1.2f, 1.2f, 1.2f);
+	drawSingle();
+	glTranslatef(1.f, 0.f, -0.2f);
+	glScalef(1.5f, 1.5f, 1.5f);
+	drawSingle();
+}
